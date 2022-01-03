@@ -14,26 +14,34 @@ export interface ApplicationDefinition extends StageDefinition {
   stage: string;
 }
 
+const {
+  DEV_ACCOUNT = '',
+  DEV_REGION = '',
+  DEV_ALIAS = '',
+  CDK_DEFAULT_ACCOUNT = '',
+  CDK_DEFAULT_REGION = ''
+} = process.env;
+
 export const project = 'template';
 export const repo = 'full-stack-cognito-template';
 
 export const stages: StageDefinition[] = [
   {
     branch: 'individual',
-    alias: 'myalias-dev',
+    alias: DEV_ALIAS,
     env: {
-      account: '123456789012',
-      region: 'us-east-1'
+      account: DEV_ACCOUNT || CDK_DEFAULT_ACCOUNT,
+      region: DEV_REGION || CDK_DEFAULT_REGION
     },
     description: 'An ephemeral stage devs can use for creating isolated resources during development.',
     deployMfa: true
   },
   {
     branch: 'develop',
-    alias: 'myalias-dev',
+    alias: DEV_ALIAS,
     env: {
-      account: '123456789012',
-      region: 'us-east-1'
+      account: DEV_ACCOUNT ?? CDK_DEFAULT_ACCOUNT,
+      region: DEV_REGION ?? CDK_DEFAULT_REGION
     },
     description: 'The Sig AWS dev account',
     deployMfa: true
