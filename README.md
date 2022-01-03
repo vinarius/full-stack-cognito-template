@@ -27,7 +27,7 @@ STACK='MyStack' npm run deploy # will deploy the 'MyStack' stack
 - `npm run test`       Perform the jest unit tests.
 - `npm run lint`       Run linting on source code.
 - `npm run watch`      Watch for changes and compile.
-- `npm run aws-token`  Set temporary mfa credentials "{profile}-token" (ie sigsee-dev-token).
+- `npm run aws-token`  Set temporary mfa credentials "{profile}-token" (ie myalias-dev-token).
 
 ## Repository Layout
 
