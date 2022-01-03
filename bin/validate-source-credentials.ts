@@ -50,7 +50,7 @@ export async function validateSourceCredentials(): Promise<void> {
 
     console.log('>>> Source credentials not found. Importing...');
     
-    const getSecretInput: GetSecretValueCommandInput = { SecretId: 'sig-pipelineToken' };
+    const getSecretInput: GetSecretValueCommandInput = { SecretId: 'TODO:' };
     const getSecretCommand = new GetSecretValueCommand(getSecretInput);
     const getSecretOutput: GetSecretValueCommandOutput = await secretsManagerClient.send(getSecretCommand);
 
@@ -72,4 +72,4 @@ export async function validateSourceCredentials(): Promise<void> {
   }
 }
 
-if (require.main === module) validateSourceCredentials();
+validateSourceCredentials();

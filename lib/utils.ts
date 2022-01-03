@@ -7,7 +7,6 @@ import { ApplicationDefinition, project, stages } from '../config';
 
 const promiseExec = promisify(EXEC);
 
-
 export function exec(
   command: string,
   logToConsole: boolean = true

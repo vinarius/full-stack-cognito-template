@@ -42,6 +42,4 @@ export async function syncDependencies(): Promise<void> {
   await exec(`cd ${[outDirName, layerDirName, nodeDirName].join(sep)} && npm i --only=prod --no-package-lock`);
 }
 
-if (require.main === module) {
-  syncDependencies();
-}
+syncDependencies();
