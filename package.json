@@ -5,21 +5,33 @@
     "full-stack-cognito-template": "bin/full-stack-cognito-template.js"
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "test": "jest",
-    "cdk": "cdk"
+    "aws-token": "npm run ts-node bin/aws-token",
+    "build": "npm run clean && run-p build:node",
+    "build:node": "npm run build-lambda-layer && npm run tsc",
+    "build-lambda-layer": "npm run ts-node bin/build-lambda-layer",
+    "clean": "cross-env-shell \"rm -rf cdk.out\"",
+    "cdk": "cdk",
+    "deploy": "npm run ts-node bin/deploy",
+    "diff": "npm run cdk diff",
+    "lint": "eslint . --ext .ts",
+    "synth": "run-p clean \"ts-node bin/synth\"",
+    "test": "jest --coverage --passWithNoTests",
+    "ts-node": "ts-node",
+    "tsc": "cross-env-shell \"node_modules/.bin/tsc --project tsconfig.build.json\"",
+    "validate-source-credentials": "npm run ts-node bin/validate-source-credentials",
+    "watch": "tsc -w"
   },
   "devDependencies": {
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
+    "aws-cdk": "2.3.0",
     "jest": "^26.4.2",
     "ts-jest": "^26.2.0",
-    "aws-cdk": "2.3.0",
     "ts-node": "^9.0.0",
-    "typescript": "~3.9.7"
+    "typescript": "^4.5.4"
   },
   "dependencies": {
+    "@aws-sdk/middleware-retry": "^3.40.0",
     "aws-cdk-lib": "2.3.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.16"

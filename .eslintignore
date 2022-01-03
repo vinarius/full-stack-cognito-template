@@ -1,0 +1,8 @@
+node_modules
+dist
+coverage
+docs
+scripts
+.eslintrc.js
+cdk.out
+jest.config.js

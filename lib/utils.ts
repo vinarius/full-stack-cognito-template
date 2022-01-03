@@ -1,11 +1,12 @@
-import { resolve } from 'path';
-import { ChildProcessWithoutNullStreams, exec as EXEC } from 'child_process';
 import { StandardRetryStrategy } from '@aws-sdk/middleware-retry';
-import {
-  ApplicationDefinition,
-  project,
-  stages
-} from '../config';
+import { exec as EXEC } from 'child_process';
+import { resolve } from 'path';
+import { promisify } from 'util';
+
+import { ApplicationDefinition, project, stages } from '../config';
+
+const promiseExec = promisify(EXEC);
+
 
 export function exec(
   command: string,
@@ -27,17 +28,29 @@ export function exec(
       resolve(results);
     });
 
-    (child as ChildProcessWithoutNullStreams).stdout.on('data', stdoutHandler);
-    (child as ChildProcessWithoutNullStreams).stderr.on('data', stderrHandler);
+    child.stdout.on('data', stdoutHandler);
+    child.stderr.on('data', stderrHandler);
 
     child.once('exit', (code) => {
       if (code !== 0) process.exit(1);
 
-      (child as ChildProcessWithoutNullStreams).stdout.removeListener('data', stdoutHandler);
-      (child as ChildProcessWithoutNullStreams).stderr.removeListener('data', stderrHandler);
+      child.stdout.removeListener('data', stdoutHandler);
+      child.stderr.removeListener('data', stderrHandler);
     });
   });
 }
+
+// export async function exec(command: string) {
+//   await promiseExec(command).catch(err => {
+//     console.error(err);
+//   });
+// }
+
+async function myTest() {
+  await exec('npm run cdk ls --profile sigsee-dev-token --region us-east-1');
+}
+
+myTest();
 
 export function fromRoot(path: string | string[]): string {
   const segments: string[] = typeof path === 'string' ? path.split(/[/\\]/).filter((seg) => seg !== '') : path;
