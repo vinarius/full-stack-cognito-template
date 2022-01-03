@@ -55,64 +55,13 @@ export interface DynamoUserItem {
     zip: string;
     country: string;
   };
-  biography: string;
   birthdate: string;
   email: string;
   firstName: string;
   gender: 'M'|'F'|'';
   lastName: string;
   phoneNumber: string;
-  subscription: {
-    current: {
-      datePurchased: string;
-      renewalDate: string;
-      tier: 'basic'|'premium';
-    };
-    history: {
-      datePurchased: string;
-      renewalDate: string;
-      tier: 'basic'|'premium';
-    }[];
-    isActive: boolean;
-    lastPaid: string;
-    nextBilling: string;
-    paymentFrequency: 'monthly'|'yearly'|'na';
-    trial: {
-      dateEnded: string;
-      dateStarted: string;
-      isActive: boolean;
-      isExpired: boolean;
-    }
-  }
   userId: string;
-  vault: {
-    ammo: {
-      brand: string;
-      brassMFG: string;
-      bulletWeight: string;
-      caseLength: string;
-      maximumPressure: string;
-      name: string;
-      notes: string;
-      overallLength: string;
-      powderType: string;
-      powderVolume: string;
-      powderWeight: string;
-      primerType: string;
-      type: string;
-    };
-    accessories: {
-      brand: string;
-      modelNumber: string;
-      name: string;
-      type: string;
-    }[];
-    brand: string;
-    caliber: string;
-    name: string;
-    s3ImageUrl: string;
-    serialNumber: string;
-  }[];
 }
 
 export interface ForgotPasswordReqBody {
@@ -316,8 +265,7 @@ const confirmSignUpUserSchema: Schema = {
       required: [
         'appClientId',
         'username',
-        'confirmationCode',
-        'birthdate'
+        'confirmationCode'
       ],
       properties: {
         appClientId: {
@@ -327,9 +275,6 @@ const confirmSignUpUserSchema: Schema = {
           type: jsonType.STRING
         },
         confirmationCode: {
-          type: jsonType.STRING
-        },
-        birthdate: {
           type: jsonType.STRING
         }
       }

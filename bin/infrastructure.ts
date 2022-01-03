@@ -6,7 +6,6 @@ import { config } from 'dotenv';
 
 import { FullStackCognitoTemplateStack } from '../stacks/full-stack-cognito-template-stack';
 
-
 config();
 const app = new cdk.App();
 new FullStackCognitoTemplateStack(app, 'FullStackCognitoTemplateStack', {

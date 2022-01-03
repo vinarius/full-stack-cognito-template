@@ -47,7 +47,7 @@ export function exec(
 // }
 
 async function myTest() {
-  await exec('npm run cdk ls --profile sigsee-dev-token --region us-east-1');
+  await exec('npm run cdk ls --profile myalias-dev-token --region us-east-1');
 }
 
 myTest();
@@ -60,7 +60,7 @@ export function fromRoot(path: string | string[]): string {
 export async function getLocalGitBranch(): Promise<string> {
   const output: string = await exec('git status', false);
   const [, branch] = /^On\sbranch\s([\S]*).*/.exec(output.toString()) || [];
-  return branch; // ie 'master' || 'feature/sigsee-100'
+  return branch; // ie 'master' || 'feature/myalias-100'
 }
 
 const maxRetryAttempts = 10;
