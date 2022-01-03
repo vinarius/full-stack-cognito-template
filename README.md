@@ -60,7 +60,7 @@ jest.config.js       # Defines the testing strategy used by Jest. This repositor
 package.json         # Defines the package structure, commands, dependencies, and publishing
                          strategy. Note the scripts section.
 README.md            # Defines this guide.
-swagger.yml          # Defines the api documentation for Sigsee.
+swagger.yml          # Defines the api documentation.
 tsconfig.build.json  # An extension of tsconfig.json - defines how TypeScript builds this project.
 tsconfig.json        # Defines how Typescript compiles this project.
 
@@ -101,22 +101,22 @@ STACK='MyStack' npm run deploy # will deploy the 'MyStack' stack
 
 ## Instructions for credentials/auth
 
-Your developer credentials are designed to be stored in `~/.aws/credentials` after being created on the console. It'll work smoothly across any number of accounts, and with token mfa, as long as we take care of a few small things. When naming your credentials profile, use the same name as the aws account alias. So, if the login portal alias is 'sigsee-dev' name your credentials alias the same in `~/.aws/credentials` like:
+Your developer credentials are designed to be stored in `~/.aws/credentials` after being created on the console. It'll work smoothly across any number of accounts, and with token mfa, as long as we take care of a few small things. When naming your credentials profile, use the same name as the aws account alias. So, if the login portal alias is 'myalias-dev' name your credentials alias the same in `~/.aws/credentials` like:
 
 ```
-[sigsee-dev]
+[myalias-dev]
 aws_access_key_id=******************
 aws_secret_access_key=******************
 ```
 
-Wtih mfa, the script will instead look for a temporary set of credentials to use. If the account alias, and your profile alias, are `sigsee-dev` the script will attempt to get a temporary set of token including the session token on the credentials profile `sigsee-dev-token` like this:
+Wtih mfa, the script will instead look for a temporary set of credentials to use. If the account alias, and your profile alias, are `myalias-dev` the script will attempt to get a temporary set of token including the session token on the credentials profile `myalias-dev-token` like this:
 
 ```
-[sigsee-dev]
+[myalias-dev]
 aws_access_key_id=******************
 aws_secret_access_key=******************
 
-[sigsee-dev-token]
+[myalias-dev-token]
 aws_access_key_id=******************
 aws_secret_access_key=******************
 aws_session_token=******************
@@ -125,17 +125,17 @@ aws_session_token=******************
 To generate a session token I have created a script. To use the script to create a named profile appending `-token`, invoke the npm script aws-token in the format: `npm run aws-token {profile} {token}`
 
 ```
-npm run aws-token sigsee-dev 123456
+npm run aws-token myalias-dev 123456
 ```
 This will produce the following output:
 
 ```
-Set session token in profile sigsee-dev-token, expires 10/17/2021 01:10 EDT
+Set session token in profile myalias-dev-token, expires 10/17/2021 01:10 EDT
 ```
 
-This command (if your mfa token is valid) will create the named profile sigsee-dev-token for you.
+This command (if your mfa token is valid) will create the named profile myalias-dev-token for you.
 
-The script inserts the valid token into our `~/.aws/credentials` on the `sigsee-dev-token` alias.
+The script inserts the valid token into our `~/.aws/credentials` on the `myalias-dev-token` alias.
 
 
 If you would rather not use this utility, you can [use the aws cli](https://docs.aws.amazon.com/cli/latest/reference/sts/get-session-token.html):
@@ -145,7 +145,7 @@ aws sts get-session-token
 ```
 
 ## Useful links
-1. [AWS SDK V3](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/index.html)
-2. [AWS CDK Documentation](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-construct-library.html)
+1. [AWS SDK v3](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/index.html)
+2. [AWS CDK v2 Documentation](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-construct-library.html)
 3. [AWS CLI Documentation](https://awscli.amazonaws.com/v2/documentation/api/latest/index.html)
 4. [AWS CloudFormation Reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)
