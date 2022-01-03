@@ -60,7 +60,6 @@ jest.config.js       # Defines the testing strategy used by Jest. This repositor
 package.json         # Defines the package structure, commands, dependencies, and publishing
                          strategy. Note the scripts section.
 README.md            # Defines this guide.
-swagger.yml          # Defines the api documentation.
 tsconfig.build.json  # An extension of tsconfig.json - defines how TypeScript builds this project.
 tsconfig.json        # Defines how Typescript compiles this project.
 
