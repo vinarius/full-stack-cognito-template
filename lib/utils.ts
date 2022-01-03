@@ -1,18 +1,24 @@
 import { resolve } from 'path';
 import { ChildProcessWithoutNullStreams, exec as EXEC } from 'child_process';
+import { StandardRetryStrategy } from '@aws-sdk/middleware-retry';
 import {
   ApplicationDefinition,
   project,
   stages
 } from '../config';
 
-export function exec(command: string, logToConsole: boolean = true): Promise<string> {
+export function exec(
+  command: string,
+  logToConsole: boolean = true
+  // resolveStdErr: boolean = false
+): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     function stdoutHandler(data: string) {
       if (logToConsole) console.log(data);
     }
     function stderrHandler(data: string) {
       if (logToConsole) console.error(data);
+      // if (resolveStdErr) resolve(data);
     }
 
     const child = EXEC(command, (err, results) => {
@@ -38,16 +44,37 @@ export function fromRoot(path: string | string[]): string {
   return resolve(__dirname, '..', ...segments);
 }
 
+export async function getLocalGitBranch(): Promise<string> {
+  const output: string = await exec('git status', false);
+  const [, branch] = /^On\sbranch\s([\S]*).*/.exec(output.toString()) || [];
+  return branch; // ie 'master' || 'feature/sigsee-100'
+}
+
+const maxRetryAttempts = 10;
+export const retryOptions = {
+  maxAttempts: maxRetryAttempts,
+  retryStrategy: new StandardRetryStrategy(async () => maxRetryAttempts)
+};
+
+export function validateEnvVars(envVars: string[]): Error|void {
+  const unsetEnvVars: string[] = [];
+
+  for (const variable of envVars)
+    if (!process.env[variable]) unsetEnvVars.push(variable);
+
+  if (unsetEnvVars.length > 0) throw new Error(`Unset environment variables required to execute lambda.\n\n${unsetEnvVars.join(' ')}\n`);
+}
+
 export async function getAppConfig(): Promise<ApplicationDefinition> {
   /**
    * This pattern allows for a few things. If the synth function is incorporated
    * into another process the desired stage can be programmatically set.  If not
    * a pipeline, or a developer, can take precedence and set the environment
-   * manually, ENVIRONMENT=xyz, to override the "default code branch"
+   * manually, BRANCH=xyz, to override the "default code branch"
    *   >
-   *   > ENVIRONMENT=xyz npm run synth
+   *   > BRANCH=xyz npm run synth
    *   >
-   * When ENVIRONMENT is not set the default branch will be the current repo
+   * When BRANCH is not set the default branch will be the current repo
    * branch by running `git status` to try and determine it.
    */
   const branch = process.env.BRANCH ?? await getLocalGitBranch();
@@ -59,13 +86,11 @@ export async function getAppConfig(): Promise<ApplicationDefinition> {
 
   return {
     ...config,
-    stage: config.branch === branch ? config.stage : branch, // This paradigm allows for ephemeral resource creation for team development.
+    stage: branch === 'master' ? 'prod' :
+      branch === 'develop' ? 'dev' :
+        branch.includes('/') ? branch.split('/').reverse()[0] :
+          branch, // This paradigm allows for ephemeral resource creation for team development.
+    branch,
     project
   };
-}
-
-export async function getLocalGitBranch(): Promise<string> {
-  const output: string = await exec('git status', false);
-  const [, branch] = /^On\sbranch\s([\S]*).*/.exec(output.toString()) || [];
-  return branch; // ie 'master' || 'feature/sigsee-100'
 }

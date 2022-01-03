@@ -3,9 +3,9 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: [
-    '**/*.test.ts',
-    '**/*.test.tsx',
-    '**/*.test.jsx'
+    '**/*.spec.ts',
+    '**/*.spec.tsx',
+    '**/*.spec.jsx'
   ],
   transform: {
     '^.+\\.tsx?$': 'ts-jest'

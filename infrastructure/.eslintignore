@@ -1,7 +1,0 @@
-node_modules
-dist
-coverage
-docs
-scripts
-.eslintrc.js
-swagger
