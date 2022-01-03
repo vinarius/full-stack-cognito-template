@@ -46,10 +46,6 @@ test/                # Tests to run against infrastructure stacks.
                          such as node_modules.
 .npmignore           # Defines which files should be omitted when publishing the package
                          to a registry.
-cdk.context.json     # The AWS CDK caches context values retrieved from the AWS account.
-                         This practice avoids unexpected changes to the deployments when,
-                         for example,a new Amazon Linux AMI is released, changing the
-                         Auto Scaling group.
 cdk.json             # Defines where the main entry point of the CDK application is, and is
                          used to cache context key-value pairs in addition to cdk.context.json.
 config.ts            # Environment/system configuration. Most props passed down to the stacks
