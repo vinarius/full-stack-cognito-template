@@ -81,23 +81,7 @@ Configuration files are stored at the root and code always lives in a folder to 
 
 Name your stacks! Don't let CloudFormation autogenerate your naming.
 
-This project was created using Node version 14.18 and NPM version 7.
-
-## Instructions to manually deploy
-
-```bash
-git clone <url>
-npm i
-npm run build
-npm run deploy
-```
-
-Yes, it is really that simple.
-
-This process will deploy every stack that is included in this app. If for any reason you only want to deploy a single stack (and its dependent stacks) you can run the following command. NOTE: the STACK takes a string blob with *'s and CDK will use that to deploy stacks with logical Id's that match that pattern (ie STACK='LambdaStack\*' will match and deploy the 'LambdaStackDev' stack).
-```bash
-STACK='MyStack' npm run deploy # will deploy the 'MyStack' stack
-```
+This project was created using Node version 14.18 and NPM version 8.
 
 ## Instructions for credentials/auth
 
