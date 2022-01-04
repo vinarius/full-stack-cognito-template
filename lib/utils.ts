@@ -1,16 +1,12 @@
 import { StandardRetryStrategy } from '@aws-sdk/middleware-retry';
-import { exec as EXEC } from 'child_process';
+import { ChildProcessWithoutNullStreams, exec as EXEC } from 'child_process';
 import { resolve } from 'path';
-import { promisify } from 'util';
 
 import { ApplicationDefinition, project, stages } from '../config';
-
-const promiseExec = promisify(EXEC);
 
 export function exec(
   command: string,
   logToConsole: boolean = true
-  // resolveStdErr: boolean = false
 ): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     function stdoutHandler(data: string) {
@@ -18,7 +14,6 @@ export function exec(
     }
     function stderrHandler(data: string) {
       if (logToConsole) console.error(data);
-      // if (resolveStdErr) resolve(data);
     }
 
     const child = EXEC(command, (err, results) => {
@@ -27,29 +22,17 @@ export function exec(
       resolve(results);
     });
 
-    child.stdout.on('data', stdoutHandler);
-    child.stderr.on('data', stderrHandler);
+    (child as ChildProcessWithoutNullStreams).stdout.on('data', stdoutHandler);
+    (child as ChildProcessWithoutNullStreams).stderr.on('data', stderrHandler);
 
     child.once('exit', (code) => {
       if (code !== 0) process.exit(1);
 
-      child.stdout.removeListener('data', stdoutHandler);
-      child.stderr.removeListener('data', stderrHandler);
+      (child as ChildProcessWithoutNullStreams).stdout.removeListener('data', stdoutHandler);
+      (child as ChildProcessWithoutNullStreams).stderr.removeListener('data', stderrHandler);
     });
   });
 }
-
-// export async function exec(command: string) {
-//   await promiseExec(command).catch(err => {
-//     console.error(err);
-//   });
-// }
-
-async function myTest() {
-  await exec('npm run cdk ls --profile myalias-dev-token --region us-east-1');
-}
-
-myTest();
 
 export function fromRoot(path: string | string[]): string {
   const segments: string[] = typeof path === 'string' ? path.split(/[/\\]/).filter((seg) => seg !== '') : path;
@@ -98,10 +81,11 @@ export async function getAppConfig(): Promise<ApplicationDefinition> {
 
   return {
     ...config,
-    stage: branch === 'master' ? 'prod' :
-      branch === 'develop' ? 'dev' :
-        branch.includes('/') ? branch.split('/').reverse()[0] :
-          branch, // This paradigm allows for ephemeral resource creation for team development.
+    // stage: branch === 'master' ? 'prod' : // TODO:
+    //   branch === 'develop' ? 'dev' :
+    //     branch.includes('/') ? branch.split('/').reverse()[0] :
+    //       branch, // This paradigm allows for ephemeral resource creation for team development.
+    stage: 'dev',
     branch,
     project
   };
